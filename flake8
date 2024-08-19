@@ -1,0 +1,6 @@
+[flake8]
+ignore =
+    E127,E225,E231,E262,E266,E302,E501,F401,W292,W391,E303,F841,E241,E116,E265,E402,W291
+max-line-length = 500
+verbose = 2
+statistics = True

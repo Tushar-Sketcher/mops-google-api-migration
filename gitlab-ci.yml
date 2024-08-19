@@ -1,0 +1,29 @@
+include:
+  - project: analytics/airflow/airflow-pipeline-templates
+    ref: master
+    file: dag.yml
+
+variables:
+  DEPLOY_TO: <
+    airflow.stage.ana.zillow.net
+    airflow.ana.zillow.net
+  DAG_ROOT: dag/
+
+
+.analytics_stage:
+  when: on_success
+  only:
+    refs: [ feature/MOPSDE-2591  ]
+
+
+.analytics_prod:
+  when: on_success
+  only:
+    refs: [ main ]
+
+
+publish spark scripts:
+  extends: .publish_artifact
+  variables:
+    ARTIFACT: spark_scripts/
+
