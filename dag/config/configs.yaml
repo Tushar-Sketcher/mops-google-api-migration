@@ -1,0 +1,907 @@
+common:
+  owner: "mopsde"
+  dag_artifactory_path: 'https://artifactory.zgtools.net/artifactory/analytics-generic-local/analytics/airflow/dags/big-data/mopsdag/mops-google-api-migration/'
+  user_agent: "zillow"
+#  tables_criteria: 'mart_mef.googleads_criteria_performance'
+  tables_criteria: 'mart_mops.googleads_criteria_performance'
+#  tables_criteria_conv: 'mart_mef.googleads_criteria_conv_report'
+  tables_criteria_conv: 'mart_mops.googleads_criteria_conv_report'
+  pipeler_jar: 'http://artifactory-varnish.artifactory-varnish.svc.cluster.local/artifactory/analytics-maven-local/com/zillow/pipeler/datalake-pipeler-spark-3_2.12/2.120.2035/datalake-pipeler-spark-3_2.12-2.120.2035.jar'
+  credential: { 'login_customer_id': "4757254853",
+                'client_secret': "q2KsI_DA5lQHJz7u-ZdLadVk",
+                'client_id': "83968287420-mi4soqhg1sutig5hu9u0c4m0q36naopp.apps.googleusercontent.com",
+                'developer_token': "oV03j4cCngN6d7pEQxY-eQ",
+                'refresh_token': "1//06z4S1lDSN07oCgYIARAAGAYSNwF-L9IrcVIl-X8UIZ0v2JcG9HOqVp1ue59wP-NVpa4c9SuXcStvz_UcCI8mRWq4gxrxk_dWgOw",
+                'use_proto_plus': 'False' }
+  enum_data: { 'campaign.status': 'google_ads_client.enums.CampaignStatusEnum.CampaignStatus.Name(row.campaign.status)',
+               'metrics.historical_search_predicted_ctr': 'google_ads_client.enums.QualityScoreBucketEnum.QualityScoreBucket.Name(row.metrics.historical_search_predicted_ctr)',
+               'ad_group.status': 'google_ads_client.enums.AdGroupStatusEnum.AdGroupStatus.Name(row.ad_group.status)',
+               'ad_group_ad.status': 'google_ads_client.enums.AdGroupAdStatusEnum.AdGroupAdStatus.Name(row.ad_group_ad.status)',
+               'segments.device': 'google_ads_client.enums.DeviceEnum.Device.Name(row.segments.device)',
+               'ad_group_ad.ad.device_preference': 'google_ads_client.enums.DeviceEnum.Device.Name(row.ad_group_ad.ad.device_preference)',
+               'campaign.bidding_strategy_type': 'google_ads_client.enums.BiddingStrategyTypeEnum.BiddingStrategyType.Name(row.campaign.bidding_strategy_type)',
+               'segments.ad_network_type': 'google_ads_client.enums.AdNetworkTypeEnum.AdNetworkType.Name(row.segments.ad_network_type)',
+               'campaign.advertising_channel_sub_type': 'google_ads_client.enums.AdvertisingChannelSubTypeEnum.AdvertisingChannelSubType.Name(row.campaign.advertising_channel_sub_type)',
+               'campaign.advertising_channel_type': 'google_ads_client.enums.AdvertisingChannelTypeEnum.AdvertisingChannelType.Name(row.campaign.advertising_channel_type)',
+               'campaign.experiment_type': 'google_ads_client.enums.CampaignExperimentTypeEnum.CampaignExperimentType.Name(row.campaign.experiment_type)',
+               'segments.day_of_week': 'google_ads_client.enums.DayOfWeekEnum.DayOfWeek.Name(row.segments.day_of_week)',
+               'campaign_budget.period': 'google_ads_client.enums.BudgetPeriodEnum.BudgetPeriod.Name(row.campaign_budget.period)',
+               'campaign.serving_status': 'google_ads_client.enums.CampaignServingStatusEnum.CampaignServingStatus.Name(row.campaign.serving_status)',
+               'ad_group_ad.policy_summary.approval_status': 'google_ads_client.enums.PolicyApprovalStatusEnum.PolicyApprovalStatus.Name(row.ad_group_ad.policy_summary.approval_status)',
+               'segments.conversion_action_category': 'google_ads_client.enums.ConversionActionCategoryEnum.ConversionActionCategory.Name(row.segments.conversion_action_category)',
+               'ad_group_criterion.approval_status': 'google_ads_client.enums.AdGroupCriterionApprovalStatusEnum.AdGroupCriterionApprovalStatus.Name(row.ad_group_criterion.approval_status)',
+               'ad_group_criterion.status': 'google_ads_client.enums.AdGroupCriterionStatusEnum.AdGroupCriterionStatus.Name(row.ad_group_criterion.status)',
+               'ad_group_criterion.keyword.match_type': 'google_ads_client.enums.KeywordMatchTypeEnum.KeywordMatchType.Name(row.ad_group_criterion.keyword.match_type)',
+               'geographic_view.location_type': 'google_ads_client.enums.GeoTargetingTypeEnum.GeoTargetingType.Name(row.geographic_view.location_type)',
+               'segments.search_engine_results_page_type': 'google_ads_client.enums.SearchEngineResultsPageTypeEnum.SearchEngineResultsPageType.Name(row.segments.search_engine_results_page_type)',
+               'segments.search_term_match_type': 'google_ads_client.enums.SearchTermMatchTypeEnum.SearchTermMatchType.Name(row.segments.search_term_match_type)',
+               'search_term_view.status': 'google_ads_client.enums.SearchTermTargetingStatusEnum.SearchTermTargetingStatus.Name(row.search_term_view.status)',
+               'ad_group_criterion.effective_cpc_bid_source': 'google_ads_client.enums.BiddingSourceEnum.BiddingSource.Name(row.ad_group_criterion.effective_cpc_bid_source)',
+               'ad_group_criterion.quality_info.creative_quality_score': 'google_ads_client.enums.QualityScoreBucketEnum.QualityScoreBucket.Name(row.ad_group_criterion.quality_info.creative_quality_score)',
+               'ad_group_criterion.age_range.type': 'google_ads_client.enums.AgeRangeTypeEnum.AgeRangeType.Name(row.ad_group_criterion.age_range.type_)',
+               'ad_group_criterion.type': 'google_ads_client.enums.CriterionTypeEnum.CriterionType.Name(row.ad_group_criterion.type_)',
+               'ad_group_criterion.quality_info.post_click_quality_score': 'google_ads_client.enums.QualityScoreBucketEnum.QualityScoreBucket.Name(row.ad_group_criterion.quality_info.post_click_quality_score)',
+               'ad_group_criterion.quality_info.search_predicted_ctr': 'google_ads_client.enums.QualityScoreBucketEnum.QualityScoreBucket.Name(row.ad_group_criterion.quality_info.search_predicted_ctr)',
+               'ad_group_criterion.gender.type': 'google_ads_client.enums.GenderTypeEnum.GenderType.Name(row.ad_group_criterion.gender.type_)',
+               'ad_group_criterion.parental_status.type': 'google_ads_client.enums.ParentalStatusTypeEnum.ParentalStatusType.Name(row.ad_group_criterion.parental_status.type_)',
+               'ad_group_criterion.income_range.type': 'google_ads_client.enums.IncomeRangeTypeEnum.IncomeRangeType.Name(row.ad_group_criterion.income_range.type_)'
+
+  }
+  schedule_interval: 0 9 * * *
+  start_date: 2022-09-01 00:00:00
+  lookback_days: '30'
+  monthly_lookback_days: '90'
+  secret_env_var: ['token:mefde-slack-api-key:token', 'channel_id:mefde-slack-api-key:channel_id']
+
+
+stage:
+  email_id: "v-sriramp@zillowgroup.com"
+  aws_role_mef: 'arn:aws:iam::170606514770:role/dev-mops-de-analytics-role'
+  aws_role: 'arn:aws:iam::170606514770:role/dev-mops-de-analytics-role'
+  zacs_role: 'arn:aws:iam::170606514770:role/dev-mops-de-analytics-role'
+  raw_s3_bucket: 'dev-serve-datalake-zillowgroup'
+  lcp_api: "ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKU1V6STFOaUlzSW10cFpDSTZJbU5pWVdJNU1ETmtNakUzTm1WaU1HWXdaVE14WVdNeFlUWTNNRE15TVdFMkluMC5leUpwYzNNaU9pSmtZWFJoY0c5eWRHRnNMblZ6WlhJaUxDSnpkV0lpT2lKZlZEa3hNQ0lzSW1saGRDSTZNVFkzTmprNU9UUXlOQ3dpYm1KbUlqb3hOamMyT1RrNU5ESTBMQ0psZUhBaU9qRTNNRGcwTlRNNE1EQXNJbXAwYVNJNklqTTBabVZrWVdKbUxURm1NV1V0TkdKalpDMWhOR014TFdZeU9UazBOVFppTWpRNVlTSXNJbUY2Y0NJNklqSXlOak0zTUNJc0luTmpiM0JsSWpwYkltRndhVHB5WldGa09tTnZiblJ5WVdOMElpd2lZWEJwT25keWFYUmxPbU52Ym5SeVlXTjBJaXdpZEdWaGJUcHRiM0J6WkdVaVhYMC5IUXZIRi1xTTN3MzBxcldiVlphbHFsSzVENmVTSHRiQ2dhVEgtMURfX0wzWTJKcUJWNXB6QkQxNkNFZVFtaFlJbXc3WXdaR3ZQeXdiMWdjQkNlY2l3bERoUnBUTk13NFppUURRQ1ZTcmtoaE9taE5JNnUzZEd4QUFTM0gyVEkweV9LNVhza0NpZ1FYTThJVEhpMUQxSnRXZWl6WnZzdjNwMHZJRW5KVjQwaXZfNTlzRDVPbUM3QUxaSzJQcW1KajR2YkNwbmw1bnU5NHFwWXJMNGNyYTd0VElaWUlxN0labEpYMzgwT3JyYXhqbktqTVo4WTJGN3lnYnhsMUlJaFhqQ21waWJ3YWlPTm5scDRZRno3U0JScENweTc5a1FUUkF1Q3hFZFdqNm92dTQ4RU43VXM1cXFJU3cyZHBScmFob0pDeEJNUWxoTkNrYXI2ZHN1bm9DWnc="
+
+prod:
+  email_id: "mopsde@zillowgroup.opsgenie.net"
+  aws_role_mef: 'arn:aws:iam::170606514770:role/mops-de-analytics-role'
+  aws_role: 'arn:aws:iam::170606514770:role/mops-de-analytics-role'
+  zacs_role: 'arn:aws:iam::170606514770:role/mops-de-analytics-role'
+  raw_s3_bucket: 'serve-datalake-zillowgroup'
+  lcp_api: "ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKU1V6STFOaUo5LmV5SnBjM01pT2lKa1lYUmhjRzl5ZEdGc0xuVnpaWElpTENKemRXSWlPaUpmVkRFek9EY2lMQ0pwWVhRaU9qRTJNell6TmpRek56UXNJbTVpWmlJNk1UWXpOak0yTkRNM05Dd2laWGh3SWpveE9USTBPRGcxT0RBd0xDSnFkR2tpT2lJeE9XVTVZMlU0WmkwNVlXWm1MVFF6WkRZdE9UQXpZUzFrWW1NeE5qYzBOamd3TjJNaUxDSmhlbkFpT2lJeU1qQTFNVEFpTENKelkyOXdaU0k2V3lKaGNHazZjbVZoWkRwamIyNTBjbUZqZENJc0ltRndhVHAzY21sMFpUcGpiMjUwY21GamRDSXNJblJsWVcwNmJXOXdjMlJsSWwxOS5IYzdkU3RIeEt5Unl6VEo4UnNOaE1yajlRUnZFRTVlTnQwWXl3bHVyb0F5WDk3OEE0VHlrS3BuZzFqT1JnRVhybHFNaS1UTHAyXzlZVWd1QlZRdlQ2NUlmU0h1MXc0MFRHV0h1NWxyWXM1WUY3TVZiUlFGOXRuZzZ0TjNMbEpkRFBtaTJybUIwNUVNLVFKcWRrQUdJajhQRkFuWHFmaklUSHA1bnlUZ2oyUlozSDZHS3RCNFZLQ0MwSEtBdklqaTY1Uk1nMjVQRE91a1QtMk5PWkQyMnJUdmFPVEdrM1hZeEpsSnZ2ZnQ5QWZJYkc3cTJNSjBUcVM2c19nV0hxSmU2bk5ib3NwMjktSG1mcU9UaUlMTUhVS1BNVnYyTGxZZHBkeGhCcjVQMnp2RUFZUzBSWmJzRkpTTEJzWG1lUVBJWFlEaTNOX2pLRkkwRzlZUVA0d2JyWmc"
+
+feeds:
+  campaign_performance_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/campaign_performance_report'
+    query: "Select customer.currency_code,customer.time_zone,segments.ad_network_type,campaign.advertising_channel_sub_type,campaign.advertising_channel_type,campaign_budget.amount_micros,campaign.base_campaign,campaign.bidding_strategy,bidding_strategy.name,campaign.bidding_strategy_type,campaign.campaign_budget,campaign.id,campaign.name,campaign.status,campaign.experiment_type,customer.descriptive_name,segments.day_of_week,segments.device,campaign.end_date,customer.id,campaign.final_url_suffix,campaign_budget.has_recommended_budget,campaign_budget.explicitly_shared,campaign.maximize_conversion_value.target_roas,segments.month,campaign_budget.period,segments.quarter,campaign_budget.recommended_budget_amount_micros,campaign.serving_status,campaign.start_date,campaign_budget.total_amount_micros,campaign.tracking_url_template,campaign.url_custom_parameters,segments.week,segments.year,segments.date,metrics.absolute_top_impression_percentage,metrics.active_view_cpm,metrics.active_view_ctr,metrics.active_view_impressions,metrics.active_view_measurability,metrics.active_view_measurable_cost_micros,metrics.active_view_measurable_impressions,metrics.active_view_viewability,metrics.all_conversions,metrics.all_conversions_by_conversion_date,metrics.all_conversions_from_interactions_rate,metrics.all_conversions_value,metrics.all_conversions_value_by_conversion_date,metrics.average_cost,metrics.average_cpc,metrics.average_cpe,metrics.average_cpm,metrics.average_cpv,metrics.clicks,metrics.content_budget_lost_impression_share,metrics.content_impression_share,metrics.content_rank_lost_impression_share,metrics.conversions,metrics.conversions_by_conversion_date,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.conversions_value_by_conversion_date,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cost_per_current_model_attributed_conversion,metrics.cross_device_conversions,metrics.ctr,metrics.current_model_attributed_conversions,metrics.current_model_attributed_conversions_from_interactions_rate,metrics.current_model_attributed_conversions_from_interactions_value_per_interaction,metrics.current_model_attributed_conversions_value,metrics.current_model_attributed_conversions_value_per_cost,metrics.engagement_rate,metrics.engagements,metrics.gmail_forwards,metrics.gmail_saves,metrics.gmail_secondary_clicks,metrics.impressions,metrics.interaction_event_types,metrics.interaction_rate,metrics.interactions,metrics.search_absolute_top_impression_share,metrics.search_budget_lost_absolute_top_impression_share,metrics.search_budget_lost_impression_share,metrics.search_budget_lost_top_impression_share,metrics.search_click_share,metrics.search_exact_match_impression_share,metrics.search_impression_share,metrics.search_rank_lost_absolute_top_impression_share,metrics.search_rank_lost_impression_share,metrics.search_rank_lost_top_impression_share,metrics.search_top_impression_share,metrics.top_impression_percentage,metrics.value_per_all_conversions,metrics.value_per_all_conversions_by_conversion_date,metrics.value_per_conversion,metrics.value_per_conversions_by_conversion_date,metrics.value_per_current_model_attributed_conversion,metrics.video_quartile_p100_rate,metrics.video_quartile_p25_rate,metrics.video_quartile_p50_rate,metrics.video_quartile_p75_rate,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions,campaign.manual_cpc.enhanced_cpc_enabled,campaign.percent_cpc.enhanced_cpc_enabled FROM campaign WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+#    tables: 'mart_mef.googleads_campaign_performance'
+    tables: 'mart_mops.googleads_campaign_performance'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_campaign_performance
+      contract_group_uid: mart_mops.googleads_campaign_performance.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_campaign_performance_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  campaign_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/campaign_performance_report'
+    query: "Select customer.currency_code,customer.time_zone,segments.ad_network_type,campaign.advertising_channel_sub_type,campaign.advertising_channel_type,campaign_budget.amount_micros,campaign.base_campaign,campaign.bidding_strategy,bidding_strategy.name,campaign.bidding_strategy_type,campaign.campaign_budget,campaign.id,campaign.name,campaign.status,campaign.experiment_type,customer.descriptive_name,segments.day_of_week,segments.device,campaign.end_date,customer.id,campaign.final_url_suffix,campaign_budget.has_recommended_budget,campaign_budget.explicitly_shared,campaign.maximize_conversion_value.target_roas,segments.month,campaign_budget.period,segments.quarter,campaign_budget.recommended_budget_amount_micros,campaign.serving_status,campaign.start_date,campaign_budget.total_amount_micros,campaign.tracking_url_template,campaign.url_custom_parameters,segments.week,segments.year,segments.date,metrics.absolute_top_impression_percentage,metrics.active_view_cpm,metrics.active_view_ctr,metrics.active_view_impressions,metrics.active_view_measurability,metrics.active_view_measurable_cost_micros,metrics.active_view_measurable_impressions,metrics.active_view_viewability,metrics.all_conversions,metrics.all_conversions_by_conversion_date,metrics.all_conversions_from_interactions_rate,metrics.all_conversions_value,metrics.all_conversions_value_by_conversion_date,metrics.average_cost,metrics.average_cpc,metrics.average_cpe,metrics.average_cpm,metrics.average_cpv,metrics.clicks,metrics.content_budget_lost_impression_share,metrics.content_impression_share,metrics.content_rank_lost_impression_share,metrics.conversions,metrics.conversions_by_conversion_date,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.conversions_value_by_conversion_date,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cost_per_current_model_attributed_conversion,metrics.cross_device_conversions,metrics.ctr,metrics.current_model_attributed_conversions,metrics.current_model_attributed_conversions_from_interactions_rate,metrics.current_model_attributed_conversions_from_interactions_value_per_interaction,metrics.current_model_attributed_conversions_value,metrics.current_model_attributed_conversions_value_per_cost,metrics.engagement_rate,metrics.engagements,metrics.gmail_forwards,metrics.gmail_saves,metrics.gmail_secondary_clicks,metrics.impressions,metrics.interaction_event_types,metrics.interaction_rate,metrics.interactions,metrics.search_absolute_top_impression_share,metrics.search_budget_lost_absolute_top_impression_share,metrics.search_budget_lost_impression_share,metrics.search_budget_lost_top_impression_share,metrics.search_click_share,metrics.search_exact_match_impression_share,metrics.search_impression_share,metrics.search_rank_lost_absolute_top_impression_share,metrics.search_rank_lost_impression_share,metrics.search_rank_lost_top_impression_share,metrics.search_top_impression_share,metrics.top_impression_percentage,metrics.value_per_all_conversions,metrics.value_per_all_conversions_by_conversion_date,metrics.value_per_conversion,metrics.value_per_conversions_by_conversion_date,metrics.value_per_current_model_attributed_conversion,metrics.video_quartile_p100_rate,metrics.video_quartile_p25_rate,metrics.video_quartile_p50_rate,metrics.video_quartile_p75_rate,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions,campaign.manual_cpc.enhanced_cpc_enabled,campaign.percent_cpc.enhanced_cpc_enabled FROM campaign WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  ads_performance_report:
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/ads_performance_report_V1'
+    query: "Select customer.descriptive_name,ad_group.id,ad_group.name,ad_group.status,segments.ad_network_type,campaign.id,campaign.name,campaign.status,ad_group_ad.policy_summary.approval_status,ad_group_ad.ad.final_mobile_urls,ad_group_ad.ad.final_urls,ad_group_ad.ad.tracking_url_template,ad_group_ad.ad.url_custom_parameters,segments.date,ad_group_ad.ad.expanded_text_ad.description,ad_group_ad.ad.text_ad.description1,ad_group_ad.ad.text_ad.description2,segments.device,ad_group_ad.ad.device_preference,ad_group_ad.ad.display_url,customer.id,ad_group_ad.ad.text_ad.headline,ad_group_ad.ad.expanded_text_ad.headline_part1,ad_group_ad.ad.expanded_text_ad.headline_part2,ad_group_ad.ad.id,ad_group_ad.status,ad_group_ad.ad.responsive_search_ad.headlines,ad_group_ad.ad.responsive_search_ad.descriptions,ad_group_ad.ad.expanded_text_ad.headline_part3,ad_group_ad.ad.expanded_text_ad.description2,metrics.absolute_top_impression_percentage,metrics.active_view_cpm,metrics.active_view_ctr,metrics.active_view_impressions,metrics.active_view_measurability,metrics.active_view_measurable_cost_micros,metrics.active_view_measurable_impressions,metrics.active_view_viewability,metrics.all_conversions,metrics.all_conversions_by_conversion_date,metrics.all_conversions_from_interactions_rate,metrics.all_conversions_value,metrics.all_conversions_value_by_conversion_date,metrics.average_cost,metrics.average_cpc,metrics.average_cpe,metrics.average_cpm,metrics.average_cpv,metrics.clicks,metrics.conversions,metrics.conversions_by_conversion_date,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.conversions_value_by_conversion_date,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cost_per_current_model_attributed_conversion,metrics.cross_device_conversions,metrics.ctr,metrics.current_model_attributed_conversions,metrics.current_model_attributed_conversions_value,metrics.engagement_rate,metrics.engagements,metrics.gmail_forwards,metrics.gmail_saves,metrics.gmail_secondary_clicks,metrics.impressions,metrics.interaction_event_types,metrics.interaction_rate,metrics.interactions,metrics.top_impression_percentage,metrics.value_per_all_conversions,metrics.value_per_all_conversions_by_conversion_date,metrics.value_per_conversion,metrics.value_per_conversions_by_conversion_date,metrics.value_per_current_model_attributed_conversion,metrics.video_quartile_p100_rate,metrics.video_quartile_p25_rate,metrics.video_quartile_p50_rate,metrics.video_quartile_p75_rate,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions FROM ad_group_ad WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED,PAUSED,REMOVED) and ad_group.status IN(ENABLED,PAUSED,REMOVED) and ad_group_ad.status IN(ENABLED,PAUSED,REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'False'
+      number_of_async_tasks: 3
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '30' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 3 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+#    tables: 'mart_mef.googleads_ad_performance'
+    tables: 'mart_mops.googleads_ad_performance'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_ad_performance
+      contract_group_uid: mart_mops.googleads_ad_performance.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_ad_performance_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  ads_performance_report_ad_hoc:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/ads_performance_report_V1'
+    query: "Select customer.descriptive_name,ad_group.id,ad_group.name,ad_group.status,segments.ad_network_type,campaign.id,campaign.name,campaign.status,ad_group_ad.policy_summary.approval_status,ad_group_ad.ad.final_mobile_urls,ad_group_ad.ad.final_urls,ad_group_ad.ad.tracking_url_template,ad_group_ad.ad.url_custom_parameters,segments.date,ad_group_ad.ad.expanded_text_ad.description,ad_group_ad.ad.text_ad.description1,ad_group_ad.ad.text_ad.description2,segments.device,ad_group_ad.ad.device_preference,ad_group_ad.ad.display_url,customer.id,ad_group_ad.ad.text_ad.headline,ad_group_ad.ad.expanded_text_ad.headline_part1,ad_group_ad.ad.expanded_text_ad.headline_part2,ad_group_ad.ad.id,ad_group_ad.status,ad_group_ad.ad.responsive_search_ad.headlines,ad_group_ad.ad.responsive_search_ad.descriptions,ad_group_ad.ad.expanded_text_ad.headline_part3,ad_group_ad.ad.expanded_text_ad.description2,metrics.absolute_top_impression_percentage,metrics.active_view_cpm,metrics.active_view_ctr,metrics.active_view_impressions,metrics.active_view_measurability,metrics.active_view_measurable_cost_micros,metrics.active_view_measurable_impressions,metrics.active_view_viewability,metrics.all_conversions,metrics.all_conversions_by_conversion_date,metrics.all_conversions_from_interactions_rate,metrics.all_conversions_value,metrics.all_conversions_value_by_conversion_date,metrics.average_cost,metrics.average_cpc,metrics.average_cpe,metrics.average_cpm,metrics.average_cpv,metrics.clicks,metrics.conversions,metrics.conversions_by_conversion_date,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.conversions_value_by_conversion_date,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cost_per_current_model_attributed_conversion,metrics.cross_device_conversions,metrics.ctr,metrics.current_model_attributed_conversions,metrics.current_model_attributed_conversions_value,metrics.engagement_rate,metrics.engagements,metrics.gmail_forwards,metrics.gmail_saves,metrics.gmail_secondary_clicks,metrics.impressions,metrics.interaction_event_types,metrics.interaction_rate,metrics.interactions,metrics.top_impression_percentage,metrics.value_per_all_conversions,metrics.value_per_all_conversions_by_conversion_date,metrics.value_per_conversion,metrics.value_per_conversions_by_conversion_date,metrics.value_per_current_model_attributed_conversion,metrics.video_quartile_p100_rate,metrics.video_quartile_p25_rate,metrics.video_quartile_p50_rate,metrics.video_quartile_p75_rate,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions FROM ad_group_ad WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED,PAUSED,REMOVED) and ad_group.status IN(ENABLED,PAUSED,REMOVED) and ad_group_ad.status IN(ENABLED,PAUSED,REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  ads_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/ads_performance_report'
+    query: "Select customer.descriptive_name,ad_group.id,ad_group.name,ad_group.status,segments.ad_network_type,campaign.id,campaign.name,campaign.status,ad_group_ad.policy_summary.approval_status,ad_group_ad.ad.final_mobile_urls,ad_group_ad.ad.final_urls,ad_group_ad.ad.tracking_url_template,ad_group_ad.ad.url_custom_parameters,segments.date,ad_group_ad.ad.expanded_text_ad.description,ad_group_ad.ad.text_ad.description1,ad_group_ad.ad.text_ad.description2,segments.device,ad_group_ad.ad.device_preference,ad_group_ad.ad.display_url,customer.id,ad_group_ad.ad.text_ad.headline,ad_group_ad.ad.expanded_text_ad.headline_part1,ad_group_ad.ad.expanded_text_ad.headline_part2,ad_group_ad.ad.id,ad_group_ad.status,ad_group_ad.ad.responsive_search_ad.headlines,ad_group_ad.ad.responsive_search_ad.descriptions,ad_group_ad.ad.expanded_text_ad.headline_part3,ad_group_ad.ad.expanded_text_ad.description2,metrics.absolute_top_impression_percentage,metrics.active_view_cpm,metrics.active_view_ctr,metrics.active_view_impressions,metrics.active_view_measurability,metrics.active_view_measurable_cost_micros,metrics.active_view_measurable_impressions,metrics.active_view_viewability,metrics.all_conversions,metrics.all_conversions_by_conversion_date,metrics.all_conversions_from_interactions_rate,metrics.all_conversions_value,metrics.all_conversions_value_by_conversion_date,metrics.average_cost,metrics.average_cpc,metrics.average_cpe,metrics.average_cpm,metrics.average_cpv,metrics.clicks,metrics.conversions,metrics.conversions_by_conversion_date,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.conversions_value_by_conversion_date,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cost_per_current_model_attributed_conversion,metrics.cross_device_conversions,metrics.ctr,metrics.current_model_attributed_conversions,metrics.current_model_attributed_conversions_value,metrics.engagement_rate,metrics.engagements,metrics.gmail_forwards,metrics.gmail_saves,metrics.gmail_secondary_clicks,metrics.impressions,metrics.interaction_event_types,metrics.interaction_rate,metrics.interactions,metrics.top_impression_percentage,metrics.value_per_all_conversions,metrics.value_per_all_conversions_by_conversion_date,metrics.value_per_conversion,metrics.value_per_conversions_by_conversion_date,metrics.value_per_current_model_attributed_conversion,metrics.video_quartile_p100_rate,metrics.video_quartile_p25_rate,metrics.video_quartile_p50_rate,metrics.video_quartile_p75_rate,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions FROM ad_group_ad WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED,PAUSED,REMOVED) and ad_group.status IN(ENABLED,PAUSED,REMOVED) and ad_group_ad.status IN(ENABLED,PAUSED,REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  ad_conv_report:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/ad_conv_report'
+    enabled: True
+    query: "Select ad_group.id,segments.ad_network_type,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.device,customer.id,segments.date,ad_group_ad.ad.id FROM ad_group_ad WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED,PAUSED,REMOVED) and ad_group.status IN(ENABLED,PAUSED,REMOVED) and ad_group_ad.status IN(ENABLED,PAUSED,REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+#    tables: 'mart_mef.googleads_ad_conv_report'
+    tables: 'mart_mops.googleads_ad_conv_report'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_ad_conv_report
+      contract_group_uid: mart_mops.googleads_ad_conv_report.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_ad_conv_report_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  ad_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/ad_conv_report'
+    query: "Select ad_group.id,segments.ad_network_type,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.device,segments.date,ad_group_ad.ad.id FROM ad_group_ad WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED,PAUSED,REMOVED) and ad_group.status IN(ENABLED,PAUSED,REMOVED) and ad_group_ad.status IN(ENABLED,PAUSED,REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  keyword_performance_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/keyword_performance_report'
+    query: "Select ad_group_criterion.keyword.text,ad_group_criterion.criterion_id,ad_group_criterion.negative,ad_group_criterion.keyword.match_type,ad_group_criterion.status,ad_group_criterion.final_urls,customer.descriptive_name,customer.id,ad_group.id,ad_group.name,ad_group.status,campaign.id,campaign.name,campaign.status,segments.date,metrics.all_conversions,ad_group_criterion.approval_status,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,metrics.average_page_views,metrics.average_cost,metrics.average_cpc,metrics.average_time_on_site,metrics.bounce_rate,metrics.impressions,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.creative_quality_score,metrics.historical_quality_score,metrics.historical_creative_quality_score,metrics.historical_landing_page_quality_score,metrics.active_view_cpm,metrics.active_view_ctr,metrics.active_view_impressions,metrics.active_view_measurability,metrics.active_view_measurable_cost_micros,metrics.active_view_measurable_impressions,metrics.active_view_viewability,metrics.all_conversions_from_interactions_rate,metrics.all_conversions_value,metrics.average_cpe,metrics.average_cpm,metrics.average_cpv,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cost_per_current_model_attributed_conversion,metrics.cross_device_conversions,metrics.ctr,metrics.current_model_attributed_conversions_value,metrics.current_model_attributed_conversions,metrics.engagement_rate,metrics.engagements,metrics.gmail_forwards,metrics.gmail_saves,metrics.gmail_secondary_clicks,metrics.historical_search_predicted_ctr,metrics.interaction_rate,metrics.interaction_event_types,metrics.interactions,metrics.percent_new_visitors,metrics.search_absolute_top_impression_share,metrics.search_budget_lost_absolute_top_impression_share,metrics.search_budget_lost_top_impression_share,metrics.search_exact_match_impression_share,metrics.search_impression_share,metrics.search_rank_lost_absolute_top_impression_share,metrics.search_rank_lost_impression_share,metrics.search_rank_lost_top_impression_share,metrics.search_top_impression_share,metrics.value_per_all_conversions,metrics.value_per_conversion,metrics.value_per_current_model_attributed_conversion,metrics.video_quartile_p100_rate,metrics.video_quartile_p25_rate,metrics.video_quartile_p50_rate,metrics.video_quartile_p75_rate,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions FROM keyword_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '10' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 1 # note: number_of_async_tasks is divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num is divisible of the lookback_days
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '30' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+#    tables: 'mart_mef.googleads_keyword_performance'
+    tables: 'mart_mops.googleads_keyword_performance'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_keyword_performance
+      contract_group_uid: mart_mops.googleads_keyword_performance.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_keyword_performance_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  keyword_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/keyword_performance_report'
+    query: "Select ad_group_criterion.keyword.text,ad_group_criterion.criterion_id,ad_group_criterion.negative,ad_group_criterion.keyword.match_type,ad_group_criterion.status,ad_group_criterion.final_urls,customer.descriptive_name,customer.id,ad_group.id,ad_group.name,ad_group.status,campaign.id,campaign.name,campaign.status,segments.date,metrics.all_conversions,ad_group_criterion.approval_status,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,metrics.average_page_views,metrics.average_cost,metrics.average_cpc,metrics.average_time_on_site,metrics.bounce_rate,metrics.impressions,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.creative_quality_score,metrics.historical_quality_score,metrics.historical_creative_quality_score,metrics.historical_landing_page_quality_score,metrics.active_view_cpm,metrics.active_view_ctr,metrics.active_view_impressions,metrics.active_view_measurability,metrics.active_view_measurable_cost_micros,metrics.active_view_measurable_impressions,metrics.active_view_viewability,metrics.all_conversions_from_interactions_rate,metrics.all_conversions_value,metrics.average_cpe,metrics.average_cpm,metrics.average_cpv,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cost_per_current_model_attributed_conversion,metrics.cross_device_conversions,metrics.ctr,metrics.current_model_attributed_conversions_value,metrics.current_model_attributed_conversions,metrics.engagement_rate,metrics.engagements,metrics.gmail_forwards,metrics.gmail_saves,metrics.gmail_secondary_clicks,metrics.historical_search_predicted_ctr,metrics.interaction_rate,metrics.interaction_event_types,metrics.interactions,metrics.percent_new_visitors,metrics.search_absolute_top_impression_share,metrics.search_budget_lost_absolute_top_impression_share,metrics.search_budget_lost_top_impression_share,metrics.search_exact_match_impression_share,metrics.search_impression_share,metrics.search_rank_lost_absolute_top_impression_share,metrics.search_rank_lost_impression_share,metrics.search_rank_lost_top_impression_share,metrics.search_top_impression_share,metrics.value_per_all_conversions,metrics.value_per_conversion,metrics.value_per_current_model_attributed_conversion,metrics.video_quartile_p100_rate,metrics.video_quartile_p25_rate,metrics.video_quartile_p50_rate,metrics.video_quartile_p75_rate,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions FROM keyword_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  geo_performance_report:
+    enabled: True
+    parallel_task: 'True'
+    folder_path: 'zillowgroup/mops/google_ads/raw/geo_performance_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,segments.ad_network_type,metrics.all_conversions_from_interactions_rate,metrics.all_conversions,metrics.all_conversions_value,metrics.average_cost,metrics.average_cpc,metrics.average_cpm,metrics.average_cpv,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions_from_interactions_rate,metrics.conversions,metrics.conversions_value,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cross_device_conversions,metrics.ctr,segments.day_of_week,segments.device,customer.id,metrics.impressions,metrics.interaction_rate,metrics.interactions,metrics.interaction_event_types,geographic_view.location_type,segments.month,segments.quarter,metrics.value_per_all_conversions,metrics.value_per_conversion,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions,segments.week,segments.year,segments.date,segments.geo_target_city,geographic_view.country_criterion_id,segments.geo_target_metro,segments.geo_target_most_specific_location,segments.geo_target_region FROM geographic_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      parallel_async_lookback_days: '10' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num divisible of the lookback_days
+    monthly:
+      parallel_async_lookback_days: '15' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 3 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 6 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+#    tables: 'mart_mef.googleads_geo_performance'
+    tables: 'mart_mops.googleads_geo_performance'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_geo_performance
+      contract_group_uid: mart_mops.googleads_geo_performance.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_geo_performance_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  geo_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/geo_performance_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,segments.ad_network_type,metrics.all_conversions_from_interactions_rate,metrics.all_conversions,metrics.all_conversions_value,metrics.average_cost,metrics.average_cpc,metrics.average_cpm,metrics.average_cpv,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions_from_interactions_rate,metrics.conversions,metrics.conversions_value,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.cross_device_conversions,metrics.ctr,segments.day_of_week,segments.device,customer.id,metrics.impressions,metrics.interaction_rate,metrics.interactions,metrics.interaction_event_types,geographic_view.location_type,segments.month,segments.quarter,metrics.value_per_all_conversions,metrics.value_per_conversion,metrics.video_view_rate,metrics.video_views,metrics.view_through_conversions,segments.week,segments.year,segments.date,segments.geo_target_city,geographic_view.country_criterion_id,segments.geo_target_metro,segments.geo_target_most_specific_location,segments.geo_target_region FROM geographic_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  search_query_performance_report:
+    enabled: True
+    parallel_task: 'True'
+    folder_path: 'zillowgroup/mops/google_ads/raw/search_query_performance_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,segments.ad_network_type,metrics.all_conversions_from_interactions_rate,metrics.all_conversions,metrics.all_conversions_value,metrics.average_cost,metrics.average_cpc,metrics.average_cpm,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_ad.ad.id,metrics.cross_device_conversions,metrics.ctr,segments.date,segments.day_of_week,segments.device,customer.id,ad_group_ad.ad.final_urls,metrics.impressions,segments.month,segments.quarter,search_term_view.search_term,segments.search_term_match_type,search_term_view.status,ad_group_ad.ad.tracking_url_template,segments.week,segments.year,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.interaction_rate,metrics.interaction_event_types,metrics.interactions,metrics.value_per_all_conversions,metrics.value_per_conversion,metrics.view_through_conversions FROM search_term_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      parallel_async_lookback_days: '10' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks is divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num is divisible of the lookback_days
+    monthly:
+      parallel_async_lookback_days: '15' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 3 # note: number_of_async_tasks is divisible of the parallel_async_lookback_days
+      parallel_task_num: 6 # note: parallel_task_num is divisible of the lookback_days
+    skip_validation: False
+#    tables: 'mart_mef.googleads_search_query_performance'
+    tables: 'mart_mops.googleads_search_query_performance'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_search_query_performance
+      contract_group_uid: mart_mops.googleads_search_query_performance.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_search_query_performance_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  search_query_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/search_query_performance_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,segments.ad_network_type,metrics.all_conversions_from_interactions_rate,metrics.all_conversions,metrics.all_conversions_value,metrics.average_cost,metrics.average_cpc,metrics.average_cpm,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_ad.ad.id,metrics.cross_device_conversions,metrics.ctr,segments.date,segments.day_of_week,segments.device,customer.id,ad_group_ad.ad.final_urls,metrics.impressions,segments.month,segments.quarter,search_term_view.search_term,segments.search_term_match_type,search_term_view.status,ad_group_ad.ad.tracking_url_template,segments.week,segments.year,metrics.conversions_from_interactions_rate,metrics.conversions_value,metrics.cost_per_all_conversions,metrics.cost_per_conversion,metrics.interaction_rate,metrics.interaction_event_types,metrics.interactions,metrics.value_per_all_conversions,metrics.value_per_conversion,metrics.view_through_conversions FROM search_term_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  keywordless_performance_report:
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/keywordless_performance_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,metrics.all_conversions_from_interactions_rate,metrics.all_conversions,metrics.all_conversions_value,metrics.average_cpc,metrics.average_cpm,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions_from_interactions_rate,metrics.conversions,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,segments.webpage,metrics.cross_device_conversions,metrics.ctr,segments.date,customer.id,metrics.impressions,dynamic_search_ads_search_term_view.headline,dynamic_search_ads_search_term_view.search_term,dynamic_search_ads_search_term_view.landing_page,metrics.value_per_all_conversions,metrics.value_per_conversion FROM dynamic_search_ads_search_term_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'False'
+      number_of_async_tasks: 1
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '45' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 1 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 2 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+#    tables: 'mart_mef.googleads_keywordless_query_report'
+    tables: 'mart_mops.googleads_keywordless_query_report'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_keywordless_query_report
+      contract_group_uid: mart_mops.googleads_keywordless_query_report.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_keywordless_query_report_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  keywordless_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/keywordless_performance_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,metrics.all_conversions_from_interactions_rate,metrics.all_conversions,metrics.all_conversions_value,metrics.average_cpc,metrics.average_cpm,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions_from_interactions_rate,metrics.conversions,metrics.cost_micros,metrics.cost_per_all_conversions,metrics.cost_per_conversion,segments.webpage,metrics.cross_device_conversions,metrics.ctr,segments.date,customer.id,metrics.impressions,dynamic_search_ads_search_term_view.headline,dynamic_search_ads_search_term_view.search_term,dynamic_search_ads_search_term_view.landing_page,metrics.value_per_all_conversions,metrics.value_per_conversion FROM dynamic_search_ads_search_term_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  paid_organic_report:
+    enabled: True
+    parallel_task: 'True'
+    folder_path: 'zillowgroup/mops/google_ads/raw/paid_organic_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,metrics.average_cpc,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.combined_clicks,metrics.combined_clicks_per_query,metrics.combined_queries,metrics.ctr,segments.date,segments.day_of_week,customer.id,metrics.impressions,segments.month,metrics.organic_clicks,metrics.organic_clicks_per_query,metrics.organic_impressions,metrics.organic_impressions_per_query,metrics.organic_queries,segments.quarter,paid_organic_search_term_view.search_term,segments.search_engine_results_page_type,segments.week,segments.year FROM paid_organic_search_term_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{macros.ds_add(ds,-2)}}'
+    daily:
+      parallel_async_lookback_days: '2' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 15 # note: parallel_task_num divisible of the lookback_days
+    monthly:
+      parallel_async_lookback_days: '3' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 3 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 30 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+#    tables: 'mart_mef.googleads_paid_organic_query_report'
+    tables: 'mart_mops.googleads_paid_organic_query_report'
+    lcp:
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_paid_organic_query_report
+      contract_group_uid: mart_mops.googleads_paid_organic_query_report.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_paid_organic_query_report_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  paid_organic_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/paid_organic_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,metrics.average_cpc,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.combined_clicks,metrics.combined_clicks_per_query,metrics.combined_queries,metrics.ctr,segments.date,segments.day_of_week,customer.id,metrics.impressions,segments.month,metrics.organic_clicks,metrics.organic_clicks_per_query,metrics.organic_impressions,metrics.organic_impressions_per_query,metrics.organic_queries,segments.quarter,paid_organic_search_term_view.search_term,segments.search_engine_results_page_type,segments.week,segments.year FROM paid_organic_search_term_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{macros.ds_add(ds,-2)}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  paid_organic_report_temp:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/paid_organic_report'
+    query: "Select customer.currency_code,customer.descriptive_name,customer.time_zone,ad_group.id,ad_group.name,ad_group.status,metrics.average_cpc,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.combined_clicks,metrics.combined_clicks_per_query,metrics.combined_queries,metrics.ctr,segments.date,segments.day_of_week,customer.id,metrics.impressions,segments.month,metrics.organic_clicks,metrics.organic_clicks_per_query,metrics.organic_impressions,metrics.organic_impressions_per_query,metrics.organic_queries,segments.quarter,paid_organic_search_term_view.search_term,segments.search_engine_results_page_type,segments.week,segments.year FROM paid_organic_search_term_view WHERE segments.date >= '{start_date}' and segments.date <= '{end_date}'"
+    current_date: '{{macros.ds_add(ds,-2)}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  age_performance_report:
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/age_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.age_range.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM age_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'False'
+      number_of_async_tasks: 2
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '30' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+    tables: 'mart_mops.googleads_age_performance'
+
+  age_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/age_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.age_range.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM age_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  gender_performance_report:
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/gender_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.gender.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM gender_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED,PAUSED,REMOVED) and ad_group_criterion.status IN (ENABLED,PAUSED,REMOVED) and ad_group.status IN (ENABLED,PAUSED,REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'False'
+      number_of_async_tasks: 2
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '30' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+    tables: 'mart_mops.googleads_gender_performance'
+
+  gender_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/gender_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.gender.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM gender_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED,PAUSED,REMOVED) and ad_group_criterion.status IN (ENABLED,PAUSED,REMOVED) and ad_group.status IN (ENABLED,PAUSED,REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  user_performance_report:
+    parallel_task: 'False'
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/user_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.user_list.user_list,ad_group_criterion.user_interest.user_interest_category,ad_group_criterion.custom_intent.custom_intent,ad_group_criterion.custom_audience.custom_audience,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM ad_group_audience_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_user_performance'
+
+  user_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/user_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.user_list.user_list,ad_group_criterion.user_interest.user_interest_category,ad_group_criterion.custom_intent.custom_intent,ad_group_criterion.custom_audience.custom_audience,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM ad_group_audience_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  placement_performance_report:
+    parallel_task: 'False'
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/placement_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.placement.url,ad_group_criterion.mobile_app_category.mobile_app_category_constant,ad_group_criterion.mobile_application.app_id,ad_group_criterion.youtube_channel.channel_id,ad_group_criterion.youtube_video.video_id,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM managed_placement_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: True
+    tables: 'mart_mops.googleads_placement_performance'
+
+  placement_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/placement_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.placement.url,ad_group_criterion.mobile_app_category.mobile_app_category_constant,ad_group_criterion.mobile_application.app_id,ad_group_criterion.youtube_channel.channel_id,ad_group_criterion.youtube_video.video_id,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM managed_placement_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  parent_performance_report:
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/parent_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.parental_status.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM parental_status_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'False'
+      number_of_async_tasks: 1
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '45' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 1 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 2 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+    tables: 'mart_mops.googleads_parent_performance'
+
+  parent_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/parent_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.parental_status.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM parental_status_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  income_performance_report:
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/income_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.income_range.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM income_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'False'
+      number_of_async_tasks: 2
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '30' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+    tables: 'mart_mops.googleads_income_performance'
+
+  income_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/income_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.income_range.type,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM income_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  topic_performance_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/topic_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.topic.path,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM topic_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: True
+    tables: 'mart_mops.googleads_topic_performance'
+
+  topic_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/topic_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.topic.path,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM topic_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  keyword_criteria_performance_report:
+    enabled: True
+    folder_path: 'zillowgroup/mops/google_ads/raw/keyword_criteria_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.keyword.text,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM keyword_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      parallel_task: 'False'
+      number_of_async_tasks: 2
+    monthly:
+      parallel_task: 'True'
+      parallel_async_lookback_days: '30' # note: parallel_async_lookback_days = lookback_days / parallel_task_num
+      number_of_async_tasks: 2 # note: number_of_async_tasks divisible of the parallel_async_lookback_days
+      parallel_task_num: 3 # note: parallel_task_num divisible of the lookback_days
+    skip_validation: False
+    tables: 'mart_mops.googleads_keyword_criteria_performance'
+
+  keyword_criteria_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/keyword_criteria_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.keyword.text,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM keyword_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  webpage_performance_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/webpage_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.webpage.criterion_name,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM webpage_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_webpage_performance'
+
+  webpage_performance_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/webpage_performance_report'
+    query: "Select ad_group.name,ad_group.id,ad_group.status,segments.ad_network_type,metrics.all_conversions,ad_group_criterion.approval_status,metrics.top_impression_percentage,metrics.absolute_top_impression_percentage,ad_group_criterion.bid_modifier,campaign.id,campaign.name,campaign.status,metrics.clicks,metrics.conversions,metrics.cost_micros,ad_group_criterion.effective_cpc_bid_micros,ad_group_criterion.effective_cpc_bid_source,ad_group_criterion.quality_info.creative_quality_score,ad_group_criterion.webpage.criterion_name,ad_group_criterion.type,metrics.cross_device_conversions,customer.descriptive_name,segments.date,segments.device,customer.id,ad_group_criterion.final_mobile_urls,ad_group_criterion.final_urls,ad_group_criterion.position_estimates.first_page_cpc_micros,ad_group_criterion.position_estimates.first_position_cpc_micros,ad_group_criterion.criterion_id,metrics.impressions,ad_group_criterion.quality_info.post_click_quality_score,ad_group_criterion.quality_info.quality_score,ad_group_criterion.quality_info.search_predicted_ctr,ad_group_criterion.status,ad_group_criterion.position_estimates.top_of_page_cpc_micros,ad_group_criterion.tracking_url_template,ad_group_criterion.url_custom_parameters,metrics.view_through_conversions FROM webpage_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  age_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/age_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM age_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 3
+    skip_validation: False
+    tables: 'mart_mops.googleads_age_criteria_conv_report'
+
+  age_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/age_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM age_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  gender_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/gender_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM gender_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_gender_criteria_conv_report'
+
+  gender_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/gender_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM gender_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  user_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/user_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM ad_group_audience_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_user_criteria_conv_report'
+
+  user_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/user_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM ad_group_audience_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  placement_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/placement_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM managed_placement_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: True
+    tables: 'mart_mops.googleads_placement_criteria_conv_report'
+
+  placement_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/placement_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM managed_placement_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  parent_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/parent_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM parental_status_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_parent_criteria_conv_report'
+
+  parent_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/parent_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM parental_status_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  income_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/income_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM income_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_income_criteria_conv_report'
+
+  income_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/income_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM income_range_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  topic_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/topic_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM topic_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: True
+    tables: 'mart_mops.googleads_topic_criteria_conv_report'
+
+  topic_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/topic_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM topic_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  keyword_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/keyword_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM keyword_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_keyword_criteria_conv_report'
+
+  keyword_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/keyword_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM keyword_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  webpage_criteria_conv_report:
+    enabled: True
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/webpage_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM webpage_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: 'mart_mops.googleads_webpage_criteria_conv_report'
+
+  webpage_criteria_conv_report_historical:
+    parallel_task: 'False'
+    folder_path: 'zillowgroup/mops/google_ads/raw/webpage_criteria_conv_report'
+    query: "Select segments.ad_network_type,ad_group.id,segments.conversion_action_category,segments.conversion_action_name,metrics.conversions,segments.date,segments.device,ad_group_criterion.criterion_id,ad_group_criterion.type,customer.id FROM webpage_view Where segments.date >= '{start_date}' and segments.date <= '{end_date}' and campaign.status IN(ENABLED, PAUSED, REMOVED) and ad_group_criterion.status IN (ENABLED, PAUSED, REMOVED) and ad_group.status IN (ENABLED, PAUSED, REMOVED)"
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+    tables: ''
+
+  googleads_criteria_performance:
+    parallel_task: 'False'
+    aws_role: ''
+    zacs_role: ''
+    raw_s3_bucket: ''
+    folder_path: ''
+    query: ""
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+#    tables: 'mart_mef.googleads_criteria_performance'
+    tables: 'mart_mops.googleads_criteria_performance'
+    lcp:
+      lcp_api: "ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKU1V6STFOaUo5LmV5SnBjM01pT2lKa1lYUmhjRzl5ZEdGc0xuVnpaWElpTENKemRXSWlPaUpmVkRFek9EY2lMQ0pwWVhRaU9qRTJNell6TmpRek56UXNJbTVpWmlJNk1UWXpOak0yTkRNM05Dd2laWGh3SWpveE9USTBPRGcxT0RBd0xDSnFkR2tpT2lJeE9XVTVZMlU0WmkwNVlXWm1MVFF6WkRZdE9UQXpZUzFrWW1NeE5qYzBOamd3TjJNaUxDSmhlbkFpT2lJeU1qQTFNVEFpTENKelkyOXdaU0k2V3lKaGNHazZjbVZoWkRwamIyNTBjbUZqZENJc0ltRndhVHAzY21sMFpUcGpiMjUwY21GamRDSXNJblJsWVcwNmJXOXdjMlJsSWwxOS5IYzdkU3RIeEt5Unl6VEo4UnNOaE1yajlRUnZFRTVlTnQwWXl3bHVyb0F5WDk3OEE0VHlrS3BuZzFqT1JnRVhybHFNaS1UTHAyXzlZVWd1QlZRdlQ2NUlmU0h1MXc0MFRHV0h1NWxyWXM1WUY3TVZiUlFGOXRuZzZ0TjNMbEpkRFBtaTJybUIwNUVNLVFKcWRrQUdJajhQRkFuWHFmaklUSHA1bnlUZ2oyUlozSDZHS3RCNFZLQ0MwSEtBdklqaTY1Uk1nMjVQRE91a1QtMk5PWkQyMnJUdmFPVEdrM1hZeEpsSnZ2ZnQ5QWZJYkc3cTJNSjBUcVM2c19nV0hxSmU2bk5ib3NwMjktSG1mcU9UaUlMTUhVS1BNVnYyTGxZZHBkeGhCcjVQMnp2RUFZUzBSWmJzRkpTTEJzWG1lUVBJWFlEaTNOX2pLRkkwRzlZUVA0d2JyWmc"
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_criteria_performance
+      contract_group_uid: mart_mops.googleads_criteria_performance.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_criteria_performance_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'
+
+  googleads_criteria_conv_report:
+    parallel_task: 'False'
+    aws_role: ''
+    zacs_role: ''
+    raw_s3_bucket: ''
+    folder_path: ''
+    query: ""
+    current_date: '{{ds}}'
+    daily:
+      number_of_async_tasks: 1
+    monthly:
+      number_of_async_tasks: 1
+    skip_validation: False
+#    tables: 'mart_mef.googleads_criteria_conv_report'
+    tables: 'mart_mops.googleads_criteria_conv_report'
+    lcp:
+      lcp_api: "ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKU1V6STFOaUo5LmV5SnBjM01pT2lKa1lYUmhjRzl5ZEdGc0xuVnpaWElpTENKemRXSWlPaUpmVkRFek9EY2lMQ0pwWVhRaU9qRTJNell6TmpRek56UXNJbTVpWmlJNk1UWXpOak0yTkRNM05Dd2laWGh3SWpveE9USTBPRGcxT0RBd0xDSnFkR2tpT2lJeE9XVTVZMlU0WmkwNVlXWm1MVFF6WkRZdE9UQXpZUzFrWW1NeE5qYzBOamd3TjJNaUxDSmhlbkFpT2lJeU1qQTFNVEFpTENKelkyOXdaU0k2V3lKaGNHazZjbVZoWkRwamIyNTBjbUZqZENJc0ltRndhVHAzY21sMFpUcGpiMjUwY21GamRDSXNJblJsWVcwNmJXOXdjMlJsSWwxOS5IYzdkU3RIeEt5Unl6VEo4UnNOaE1yajlRUnZFRTVlTnQwWXl3bHVyb0F5WDk3OEE0VHlrS3BuZzFqT1JnRVhybHFNaS1UTHAyXzlZVWd1QlZRdlQ2NUlmU0h1MXc0MFRHV0h1NWxyWXM1WUY3TVZiUlFGOXRuZzZ0TjNMbEpkRFBtaTJybUIwNUVNLVFKcWRrQUdJajhQRkFuWHFmaklUSHA1bnlUZ2oyUlozSDZHS3RCNFZLQ0MwSEtBdklqaTY1Uk1nMjVQRE91a1QtMk5PWkQyMnJUdmFPVEdrM1hZeEpsSnZ2ZnQ5QWZJYkc3cTJNSjBUcVM2c19nV0hxSmU2bk5ib3NwMjktSG1mcU9UaUlMTUhVS1BNVnYyTGxZZHBkeGhCcjVQMnp2RUFZUzBSWmJzRkpTTEJzWG1lUVBJWFlEaTNOX2pLRkkwRzlZUVA0d2JyWmc"
+      entity_uid: zg-datalake-hive.hive.mart_mops.googleads_criteria_conv_report
+      contract_group_uid: mart_mops.googleads_criteria_conv_report.daily
+      partition_map: 'data_date'
+      driver_memory: '2G'
+      instance_name: 'mart_mops_googleads_criteria_conv_report_daily'
+      pipeler_role_arn: 'arn:aws:iam::170606514770:role/mef-de-analytics-role'
+      api_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkYXRhcG9ydGFsLnVzZXIiLCJzdWIiOiJfVDEzODciLCJpYXQiOjE2MzYzNjQzNzQsIm5iZiI6MTYzNjM2NDM3NCwiZXhwIjoxOTI0ODg1ODAwLCJqdGkiOiIxOWU5Y2U4Zi05YWZmLTQzZDYtOTAzYS1kYmMxNjc0NjgwN2MiLCJhenAiOiIyMjA1MTAiLCJzY29wZSI6WyJhcGk6cmVhZDpjb250cmFjdCIsImFwaTp3cml0ZTpjb250cmFjdCIsInRlYW06bW9wc2RlIl19.Hc7dStHxKyRyzTJ8RsNhMrj9QRvEE5eNt0YywluroAyX978A4TykKpng1jORgEXrlqMi-TLp2_9YUguBVQvT65IfSHu1w40TGWHu5lrYs5YF7MVbRQF9tng6tN3LlJdDPmi2rmB05EM-QJqdkAGIj8PFAnXqfjITHp5nyTgj2RZ3H6GKtB4VKCC0HKAvIji65RMg25PDOukT-2NOZD22rTvaOTGk3XYxJlJvvft9AfIbG7q2MJ0TqS6s_gWHqJe6nNbosp29-HmfqOTiILMHUKPMVv2LlYdpdxhBr5P2zvEAYS0RZbsFJSLBsXmeQPIXYDi3N_jKFI0G9YQP4wbrZg'

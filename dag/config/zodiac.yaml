@@ -1,0 +1,7 @@
+version: v2
+zodiac_team: mopsde
+zodiac_service: mops-zacs-sem-fb
+environments:
+  batch:
+    stage: stable
+    prod: prod
